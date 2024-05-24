@@ -1,8 +1,8 @@
 __flash = 0x0;
-__flash_size = 32K;
+__flash_size = 8M;
 __ram = 0x20000000;
-__ram_size = 16K;
-__stack_size = 512;
+__ram_size = 80M;
+__stack_size = 4K;
 
 /* picolibc.ld
  * Changes:
