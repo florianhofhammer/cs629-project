@@ -29,6 +29,8 @@ function Bool isMMIO(Bit#(32) addr);
         32'hf000fff0: True;
         32'hf000fff4: True;
         32'hf000fff8: True;
+        32'hf0000000: True;
+        32'hf0000005: True;
         default: False;
     endcase;
     return x;
