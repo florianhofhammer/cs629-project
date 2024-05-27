@@ -1,6 +1,6 @@
 import RVUtil::*;
 import BRAM::*;
-import pipelined::*; // TODO:
+import multicycle::*; // TODO:
 import FIFO::*;
 typedef Bit#(32) Word;
 
@@ -41,7 +41,7 @@ module mkController#(BridgeIndication indication)(Controller);
     cfg.loadFormat = tagged Hex "mem.vmh";
     BRAM2PortBE#(Bit#(26), Word, 4) bram <- mkBRAM2ServerBE(cfg);
 
-    RVIfc rv_core <- mkpipelined; // TODO:
+    RVIfc rv_core <- mkmulticycle; // TODO:
     Reg#(Mem) ireq <- mkRegU;
     Reg#(Mem) dreq <- mkRegU;
     FIFO#(Mem) mmioreq <- mkFIFO;
