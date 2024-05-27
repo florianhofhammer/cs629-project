@@ -39,7 +39,7 @@ module mkController#(BridgeIndication indication)(Controller);
     // Instantiate the dual ported memory
     BRAM_Configure cfg = defaultValue();
     cfg.loadFormat = tagged Hex "mem.vmh";
-    BRAM2PortBE#(Bit#(26), Word, 4) bram <- mkBRAM2ServerBE(cfg);
+    BRAM2PortBE#(Bit#(28), Word, 4) bram <- mkBRAM2ServerBE(cfg);
 
     RVIfc rv_core <- mkmulticycle; // TODO:
     Reg#(Mem) ireq <- mkRegU;
@@ -75,6 +75,7 @@ module mkController#(BridgeIndication indication)(Controller);
         let x <- bram.portB.response.get();
         let req = ireq;
         if (debug) $display("Get IResp ", fshow(req), fshow(x));
+        // indication.uartTx('h69); // 'i'
         req.data = x;
             rv_core.getIResp(req);
     endrule
@@ -93,6 +94,7 @@ module mkController#(BridgeIndication indication)(Controller);
     rule responseD;
         let x <- bram.portA.response.get();
         let req = dreq;
+        // indication.uartTx('h64); // 'd'
         if (debug) $display("Get IResp ", fshow(req), fshow(x));
         req.data = x;
             rv_core.getDResp(req);
@@ -103,20 +105,23 @@ module mkController#(BridgeIndication indication)(Controller);
         if (debug) $display("Get MMIOReq", fshow(req));
         case (req.addr)
             'hf000_fff0: begin
-                // Writing to STDERR
-                $fwrite(stderr, "%c", req.data[7:0]);
-                $fflush(stderr);
-                indication.uartTx(req.data[7:0]);
+                // overloaded address from labs
+                if (req.byte_en == 'h0) begin
+                    // Reading from UART
+                    mmio_state <= WaitingData;
+                    uartDataReq.enq(req);
+                    indication.uartRxReq();
+                end
+                else begin
+                    // Writing to UART
+                    indication.uartTx(req.data[7:0]);
+                    mmioreq.enq(req);
+                end
 
                 mmioreq.enq(req);
             end
             'hf000_fff4: begin
-                if (req.byte_en == 'hf) begin
-                    // Writing integer to STDERR
-                    // $fwrite(stderr, "%0d", req.data);
-                    // $fflush(stderr);
-                end
-
+                // no op
                 mmioreq.enq(req);
             end
             'hf000_fff8: begin
