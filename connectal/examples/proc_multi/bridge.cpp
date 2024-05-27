@@ -75,6 +75,7 @@ class BridgeIndication : public BridgeIndicationWrapper
 {
 public:
     virtual void uartAvailReq() {
+        printf("uartAvailReq\n");
         bridgeRequestProxy->uartAvailResp(!uart_buf->empty());
     }
 
@@ -83,6 +84,7 @@ public:
     }
 
     virtual void uartRxReq() {
+        printf("uartRxReq\n");
         char c = uart_buf->deq();
         bridgeRequestProxy->uartRxResp(c);
     }
@@ -115,7 +117,7 @@ int main(int argc, const char **argv)
     pthread_t input_handler, timer_handler;
 
     // input handler thread
-    // pthread_create(&input_handler, nullptr, *handle_input, nullptr);
+    pthread_create(&input_handler, nullptr, *handle_input, nullptr);
 
     // timer interrupt thread
     pthread_create(&timer_handler, nullptr, *handle_timer, nullptr);
@@ -124,7 +126,8 @@ int main(int argc, const char **argv)
     printf("[Info] Main thread waiting\n");
     sem_wait(&sem_finish);
     printf("[Info] Main thread finishing\n");
-    // pthread_cancel(input_handler);
+    // while(true) {}
+    pthread_cancel(input_handler);
     pthread_cancel(timer_handler);
     return ret_code;
 }
