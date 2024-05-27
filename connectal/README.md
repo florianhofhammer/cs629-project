@@ -13,5 +13,9 @@ make run.verilator
 in the `examples/proc_multi` folder. This also generates most things inside the
 `verilator` folder. 
 
+The project is set up to use `Controller.bsv` as the top hardware interface, and
+`bridge.cpp` on the software side. The config is done inside the `Makefile`
+itself. 
+
 Instructions for dependencies for Connectal can be found in its readme at
 [CONNECTAL.md](CONNECTAL.md).
