@@ -115,7 +115,6 @@ module mkController#(BridgeIndication indication)(Controller);
                 else begin
                     // Writing to UART
                     indication.uartTx(req.data[7:0]);
-                    mmioreq.enq(req);
                 end
 
                 mmioreq.enq(req);

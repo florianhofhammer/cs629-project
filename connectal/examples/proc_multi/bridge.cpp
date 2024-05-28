@@ -75,16 +75,17 @@ class BridgeIndication : public BridgeIndicationWrapper
 {
 public:
     virtual void uartAvailReq() {
-        printf("uartAvailReq\n");
+        // printf("uartAvailReq\n");
         bridgeRequestProxy->uartAvailResp(!uart_buf->empty());
     }
 
     virtual void uartTx(const uint8_t data) {
         putchar(data);
+        fflush(stdout);
     }
 
     virtual void uartRxReq() {
-        printf("uartRxReq\n");
+        // printf("uartRxReq\n");
         char c = uart_buf->deq();
         bridgeRequestProxy->uartRxResp(c);
     }
