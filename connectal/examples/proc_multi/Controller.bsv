@@ -45,7 +45,7 @@ module mkController#(BridgeIndication indication)(Controller);
     Reg#(Mem) ireq <- mkRegU;
     Reg#(Mem) dreq <- mkRegU;
     FIFO#(Mem) mmioreq <- mkFIFO;
-    let debug = True;
+    let debug = False;
     Reg#(Bit#(32)) cycle_count <- mkReg(0);
 
     Reg#(MMIOState) mmio_state <- mkReg(MMIOIdle);

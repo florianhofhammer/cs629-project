@@ -56,7 +56,7 @@ module mkmulticycle(RVIfc);
 	Reg#(MemBusiness) mem_business <- mkReg(?);
 
 	// Konata Logging
-    String dumpFile = "output.log" ;
+    // String dumpFile = "output.log" ;
     let lfh <- mkReg(InvalidFile);
 	Reg#(KonataId) current_id <- mkReg(0);
 	Reg#(KonataId) fresh_id <- mkReg(0);
@@ -69,9 +69,10 @@ module mkmulticycle(RVIfc);
 
 	rule do_tic_logging;
         if (starting) begin
-            let f <- $fopen( dumpFile, "w" ) ;
-            lfh <= f;
-            $fwrite(f, "Kanata\t0004\nC=\t1\n");
+            // let f <- $fopen( dumpFile, "w" ) ;
+            // lfh <= f; 
+            lfh <= ?; // don't use this handle anymore
+            // $fwrite(f, "Kanata\t0004\nC=\t1\n");
             starting <= False;
         end
 		konataTic(lfh);
