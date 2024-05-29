@@ -4,18 +4,10 @@
 #include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 
 #include "mmio.h"
-
-/* Set up stdio for picolibc */
-static FILE __stdio =
-    FDEV_SETUP_STREAM(uart_putchar, uart_getchar, NULL, _FDEV_SETUP_RW);
-FILE *const stdin = &__stdio;
-__strong_reference(stdin, stdout);
-__strong_reference(stdin, stderr);
 
 /* Constants (to be adapted if necessary) */
 static int const  time_divisor       = 1;
@@ -72,6 +64,7 @@ static void DumpState(struct MiniRV32IMAState *core, uint8_t *ram_image);
 struct MiniRV32IMAState *core;
 
 int main(void) {
+    puts("\n\nStarting...\n\n");
 restart:
     // Set up kernel image
     memcpy(ram_image, &_binary_build_kernel_bin_start,
@@ -93,6 +86,8 @@ restart:
             ? (dtb_ptr + MINIRV32_RAM_IMAGE_OFFSET)
             : 0;  // dtb_pa (Must be valid pointer) (Should be pointer to dtb)
     core->extraflags |= 3;  // Machine-mode.
+
+    puts("\n\nKernel img set up, running Linux VM...\n\n");
 
     // Image is loaded.
     uint64_t rt;
