@@ -19,36 +19,50 @@ public:
     Buffer() : count(0), head(0) {
         data = new char[SIZE];
         sem_init(&can_read, 0, 0);
+        pthread_mutex_init(&mutex, nullptr);
     }
     ~Buffer() {
         delete [] data;
     }
     void enq(char c) {
+        pthread_mutex_lock(&mutex);
         if (count < SIZE) {
             count++;
+            // printf("Enq at %d, %x %c;\n", head + count, c, c);
             data[head + count] = c;
             sem_post(&can_read);
         } else {
             printf("Buffer full\n");
         }
+        pthread_mutex_unlock(&mutex);
     }
     char deq() {
+        pthread_mutex_lock(&mutex);
         if (count > 0) {
             count--;
-            head += POS_MOD(head, SIZE);
-            return data[head + count];
+            char c = data[head];
+            head = POS_MOD(head + 1, SIZE);
+            // printf("Deq at %d, %x %c;\n", head, c, c);
+            pthread_mutex_unlock(&mutex);
+            return c;
         } else {
             // wait to return something
+            pthread_mutex_unlock(&mutex);
             sem_wait(&can_read);
             return deq();
         }
     }
     bool empty() {
-        return count == 0;
+        pthread_mutex_lock(&mutex);
+        bool res = count == 0;
+        pthread_mutex_unlock(&mutex);
+        return res;
     }
-    unsigned int head;
-    unsigned int count;
-    char * data;
+    volatile unsigned int head;
+    volatile unsigned int count;
+    volatile char * data;
+
+    pthread_mutex_t mutex;
 
     sem_t can_read;
 
@@ -60,6 +74,9 @@ static Buffer * uart_buf;
 void * handle_input(void * arg) {
     while (true) {
         char c = getchar();
+        if (c == EOF) {
+            return 0;
+        }
         uart_buf->enq(c);
     }
 }
@@ -115,20 +132,22 @@ int main(int argc, const char **argv)
 	    (double)actualFrequency * 1.0e-6,
 	    status, (status != 0) ? errno : 0);
 
-    pthread_t input_handler, timer_handler;
+    // pthread_t input_handler;
+    // pthread_t timer_handler;
 
     // input handler thread
-    pthread_create(&input_handler, nullptr, *handle_input, nullptr);
+    // pthread_create(&input_handler, nullptr, *handle_input, nullptr);
 
     // timer interrupt thread
-    pthread_create(&timer_handler, nullptr, *handle_timer, nullptr);
+    // pthread_create(&timer_handler, nullptr, *handle_timer, nullptr);
 
     // main thread chills
     printf("[Info] Main thread waiting\n");
-    sem_wait(&sem_finish);
+    handle_input(nullptr);
+    // sem_wait(&sem_finish);
     printf("[Info] Main thread finishing\n");
     // while(true) {}
-    pthread_cancel(input_handler);
-    pthread_cancel(timer_handler);
+    // pthread_cancel(input_handler);
+    // pthread_cancel(timer_handler);
     return ret_code;
 }
