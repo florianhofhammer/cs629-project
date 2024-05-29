@@ -8,6 +8,7 @@
 #define SPACE_CHAR      ' '
 #define WALL_CHAR       '#'
 #define FOOD_CHAR       '@'
+#define NEWLINES        4
 
 // Not all coordinates are supposed to be vec2d,
 // it is used only where necessary to avoid memory management
@@ -31,9 +32,7 @@ int randInRange(const int lower, const int upper) {
 }
 
 void clearConsole() {
-    int i;
-
-    for (i = 0; i < 2; i++) {
+    for (int i = 0; i < NEWLINES; i++) {
         putchar('\n');
     }
 }
@@ -159,6 +158,11 @@ void init() {
     snakeAddPart(snake[0].x, snake[0].y);
 
     createFood();
+
+    clearConsole();
+    clearBuffer();
+    gameToBuffer();
+    drawFrame();
 }
 
 typedef enum dir_e {
