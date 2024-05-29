@@ -26,23 +26,6 @@ int snakeSize = 0;
 vec2d foodPos;
 vec2d snake[WIDTH * HEIGHT];
 
-// Distance between two points measured in right angles
-int manhattanDistance(const int x1, const int y1, const int x2, const int y2) {
-    int xDiff = x2 - x1;
-    int yDiff = y2 - y1;
-
-    // Didn't want to include math.h just for abs()
-    if (xDiff < 0) {
-        xDiff = -xDiff;
-    }
-
-    if (yDiff < 0) {
-        yDiff = -yDiff;
-    }
-
-    return xDiff + yDiff;
-}
-
 int randInRange(const int lower, const int upper) {
     return (rand() % (upper - lower + 1)) + lower;
 }
@@ -152,40 +135,6 @@ void snakeMove(const int xmove, const int ymove) {
     snake[0].y = yNewHead;
 }
 
-void snakeThink() {
-    const vec2d destinations[4] = {{snake[0].x + 1, snake[0].y},
-                                   {snake[0].x - 1, snake[0].y},
-                                   {snake[0].x, snake[0].y + 1},
-                                   {snake[0].x, snake[0].y - 1}};
-
-    vec2d bestMove;
-
-    int bestDistance = -1;
-    int i;
-
-    // Determine which of the four directions is closer to food
-    // and does not collide with anything
-    for (i = 0; i < 4; i++) {
-        int dist = manhattanDistance(destinations[i].x, destinations[i].y,
-                                     foodPos.x, foodPos.y);
-
-        if (dist < bestDistance || bestDistance == -1) {
-            if (!checkCollision(destinations[i].x, destinations[i].y)) {
-                bestDistance = dist;
-                bestMove     = destinations[i];
-            }
-        }
-    }
-
-    if (bestDistance != -1) {
-        snakeMove(bestMove.x - snake[0].x, bestMove.y - snake[0].y);
-    }
-    // No valid moves
-    else {
-        lose();
-    }
-}
-
 // Write game objects to buffer
 void gameToBuffer() {
     frameBuffer[foodPos.x][foodPos.y] = FOOD_CHAR;
@@ -224,6 +173,7 @@ void tick() {
 
     while (1) {
         char c = getchar();
+        /* On enter, redraw. Otherwise, move snake */
         switch (c) {
             case 'a':
             case 'h':
@@ -242,13 +192,14 @@ void tick() {
                 direction = DOWN;
                 break;
             case '\n':
+                clearConsole();
+                clearBuffer();
+                gameToBuffer();
+                drawFrame();
                 continue;
             default:
                 break;
         }
-
-        clearConsole();
-        clearBuffer();
 
         switch (direction) {
             case UP:
@@ -264,10 +215,6 @@ void tick() {
                 snakeMove(1, 0);
                 break;
         }
-
-        gameToBuffer();
-
-        drawFrame();
     }
 }
 
