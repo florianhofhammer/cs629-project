@@ -1,7 +1,6 @@
 // Copyright 2022 Charles Lohr, you may use this file or any portions herein
 // under any of the BSD, MIT, or CC0 licenses.
 
-#include <signal.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
