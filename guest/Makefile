@@ -30,7 +30,7 @@ ELF32=$(addsuffix 32,$(ELF))
 HEX32=$(addsuffix .hex,$(ELF32))
 ELF2HEX=../elf2hex
 
-all: img.bin img.hex mem.vmh memlines.vmh
+all: img.hex mem.vmh memlines.vmh
 
 help: ## Show this help
 	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | sort | \
