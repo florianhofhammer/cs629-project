@@ -27,9 +27,9 @@ public:
     void enq(char c) {
         pthread_mutex_lock(&mutex);
         if (count < SIZE) {
-            count++;
             // printf("Enq at %d, %x %c;\n", head + count, c, c);
             data[head + count] = c;
+            count++;
             sem_post(&can_read);
         } else {
             printf("Buffer full\n");
@@ -41,8 +41,8 @@ public:
         if (count > 0) {
             count--;
             char c = data[head];
-            head = POS_MOD(head + 1, SIZE);
             // printf("Deq at %d, %x %c;\n", head, c, c);
+            head = POS_MOD(head + 1, SIZE);
             pthread_mutex_unlock(&mutex);
             return c;
         } else {
