@@ -1,4 +1,6 @@
-img.bin
+mini-rv32ima
+snake
+tinylisp
 img.hex
 mem.vmh
 memlines.vmh

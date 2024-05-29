@@ -1,5 +1,8 @@
 .PHONY: all help clean distclean
 
+TARGET ?= mini-rv32ima
+TARGETS = snake tinylisp mini-rv32ima
+
 BUILD_DIR=build
 TOOLS_DIR=../tools
 SRCS = $(wildcard *.c)
@@ -16,7 +19,6 @@ CFLAGS = -specs=picolibc.specs \
 		 -mcmodel=medany \
 		 -static \
 		 -Tlink.ld \
-		 -Werror \
 		 -Wall \
 		 -Wextra \
 		 -Wpedantic
@@ -34,11 +36,12 @@ help: ## Show this help
 	@grep -E -h '\s##\s' $(MAKEFILE_LIST) | sort | \
 	awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-20s\033[0m %s\n", $$1, $$2}'
 
-img.bin: $(OBJS) | $(BUILD_DIR) ## Link the target image
+mini-rv32ima: $(BUILD_DIR)/kernel.o $(BUILD_DIR)/dtb.o
+$(TARGETS): % : $(BUILD_DIR)/mmio.o $(BUILD_DIR)/%.o | $(BUILD_DIR) ## Link the target
 	$(CC) $(CFLAGS) -o $@ $^
 
 img.hex: $(TOOLS_DIR)/elf2hex/elf2hex
-img.hex: img.bin ## Create the hex representation of the target image
+img.hex: $(TARGET) ## Create the hex representation of the target image
 	$(TOOLS_DIR)/elf2hex/elf2hex $< 0 4G $@
 
 mem.vmh memlines.vmh: img.hex $(TOOLS_DIR)/arrange_mem/arrange_mem.py ## Prepare memory representation for our CPU
@@ -72,4 +75,4 @@ clean: ## Remove intermediate build artifacts
 	-rm -rf $(BUILD_DIR)
 
 distclean: clean ## Remove intermediate built artifacts and the final image
-	-rm -f img.bin img.hex mem.vmh memlines.vmh
+	-rm -f mem.vmh memlines.vmh $(TARGETS) img.hex
