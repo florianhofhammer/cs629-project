@@ -2,6 +2,8 @@
 
 MEM ?= ../guest/mem.vmh
 
+REALMEM = $(realpath $(MEM))
+
 test:
 	@echo "MEM=$(MEM)"
 	@echo $@
@@ -20,11 +22,11 @@ test:
 	[ -d .build/buildcache ] || git clone https://github.com/cambridgehackers/buildcache .build/buildcache
 
 	# link to the mem.vmh file
-	ln -sf $(MEM) proc/mem.vmh
+	ln -sf $(REALMEM) proc/mem.vmh
 
 	# seed the verilator dir too
 	mkdir -p proc/verilator
-	ln -sf $(MEM) proc/verilator/mem.vmh
+	ln -sf $(REALMEM) proc/verilator/mem.vmh
 
 	# pass all arguments to proc Makefile
 	$(MAKE) -C proc $@
