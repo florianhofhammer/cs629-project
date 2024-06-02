@@ -13,8 +13,7 @@ Check the [top-level README](../README.md) for more info.
 ## Building
 
 The project is set up akin to `connectal`'s example projects. The build imports
-connectal as a submodule, and builds the current project within the `connectal`
-repository.
+`connectal` from GitHub, and builds the current project wrt it.
 
 If you have a `mem.vmh` file prepared, pass its path to the make command:
 
@@ -25,6 +24,9 @@ make run.verilator   MEM=path/to/mem.vmh
 
 to run a simulation with your file. Omitting the `MEM=` parameter defaults to
 using the image from the `guest/` directory in the root of the repository.
+
+WILL OVERWRITE ANY `mem.vmh` FILE ALREADY PRESENT IN `proc/` or
+`proc/verilator/`.
 
 Similarly, `build.vcu108`, for example, can be used to build for the FPGA
 `VCU108`. The argument is passed directly to `connectal`, where you can check

@@ -22,5 +22,9 @@ test:
 	# link to the mem.vmh file
 	ln -sf $(MEM) proc/mem.vmh
 
+	# seed the verilator dir too
+	mkdir -p proc/verilator
+	ln -sf $(MEM) proc/verilator/mem.vmh
+
 	# pass all arguments to proc Makefile
 	$(MAKE) -C proc $@
