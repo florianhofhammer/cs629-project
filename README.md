@@ -1,4 +1,8 @@
-# CS-629 Final Project
+# CS-629 Final Project: "RISCy Linux"
+
+Project team: Florian Hofhammer, Sankalp Gambhir (@{firstName}{lastName}, see sidebar)
+
+Supervised by: [Prof. Thomas Bourgeat, EPFL](https://people.epfl.ch/thomas.bourgeat?lang=en)
 
 This repository contains our code for the final project for CS-629:
 Constructive Computer Architecture @ EPFL.
