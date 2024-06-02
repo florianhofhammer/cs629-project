@@ -26,6 +26,10 @@ make run.verilator   MEM=path/to/mem.vmh
 to run a simulation with your file. Omitting the `MEM=` parameter defaults to
 using the image from the `guest/` directory in the root of the repository.
 
+Similarly, `build.vcu108`, for example, can be used to build for the FPGA
+`VCU108`. The argument is passed directly to `connectal`, where you can check
+the list of supported boards.
+
 ## Structure
 
 The project is set up to use `Controller.bsv` as the top hardware interface, and
@@ -40,8 +44,22 @@ design itself.
 Instructions for dependencies for Connectal can be found in its readme at
 [CONNECTAL.md](CONNECTAL.md). We found that using the following (latest at the
 time) dependency versions works for us, despite the `connectal` readme pointing
-to older versions:
+to older versions (package names and exact versions from ArchLinux):
 
 ```
-\\ TODO:
+bluespec-contrib-git r38.fc26b91-1    // git trunk, 2024-05-30
+bluespec-git r834.c481d7f5-1          // git trunk, 2024-05-30
+verilator 5.024-1
+gmp 6.3.0-2
+strace 6.9-1
+python-ply 3.11-13
+python-gevent 24.2.1-2
+// standard C / C++ toolchain
+gcc 14.1.1+r58+gfc9fb69ad62-1
+gcc-libs 14.1.1+r58+gfc9fb69ad62-1
+riscv64-unknown-elf-gcc 13.2.0-2      // for tests and examples
 ```
+
+Vivado 2019.02 was used to test FPGA builds, but some more work is required to
+make things actually work (though for Linux, the amount of memory required is
+too high for BRAM, and the addition of a memory controller may be required).
