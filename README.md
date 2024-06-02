@@ -10,15 +10,16 @@ As this is a quite complex task, we took a small shortcut: instead of bringing
 Linux up directly, we boot Linux in a RISC-V emulator running on top of our
 RISC-V softcore!
 
-In order to faciliate software development for our softcore, we implemented
+In order to facilitate software development for our softcore, we implemented
 two main contributions:
 
 * On the hardware side: implementation of a UART interface that allows for
-  communication with the softcore via the command line.
-  The goal is to have the same working interface, no matter whether the core
-  runs in verilator or on a real FPGA.
-  For this purpose, we implement an interface based on the `connectal` project.
-* On the software side: implementation of libc support for our softcore and its
+  communication layer with the softcore via the command line. The goal is to
+  have the same working interface, no matter whether the core runs in a
+  Verilator simulation or on a real FPGA. For this purpose, we implement an
+  interface based on [the `connectal`
+  project](https://github.com/cambridgehackers/connectal).
+* On the software side: implementation of `libc` support for our softcore and its
   interfaces to be able to run more complex code.
   Notably, this includes formatted I/O which significantly simplifies
   implementation of more complex code (and `printf`-debugging in the process).

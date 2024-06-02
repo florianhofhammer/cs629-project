@@ -1,3 +1,0 @@
-#! /bin/bash
-
-./run.android --buildbot-url=http://connectalbuild.qrclab.com/archive --project=connectal-simple/zedboard --build-number=10  --board-name=daffodil_zedboard

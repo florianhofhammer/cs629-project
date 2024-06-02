@@ -1,8 +1,0 @@
-{
-    "uart_SOUT": {
-	"uart": "d_out"
-    },
-    "uart_SIN": {
-	"uart": "d_in"
-    }
-}

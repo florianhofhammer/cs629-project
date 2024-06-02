@@ -1,4 +1,0 @@
-#!/bin/sh
-
-make CONNECTALDIR=/usr/share/connectal $*
-
